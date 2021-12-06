@@ -31,6 +31,9 @@ phar: vendor ## Builds a phar with humbug/box
 	git checkout HEAD -- composer.json composer.lock
 	.phive/box info .build/phar/composer-normalize.phar
 	.build/phar/composer-normalize.phar
+	.build/phar/composer-normalize.phar --ansi --dry-run composer.json
+	.build/phar/composer-normalize.phar --no-ansi --dry-run composer.json
+	.build/phar/composer-normalize.phar --dry-run -vvv composer.json
 	.build/phar/composer-normalize.phar --dry-run composer.json
 
 .PHONY: schema

@@ -296,7 +296,18 @@ final class NormalizeCommand extends Command\BaseCommand
         return self::updateLockerInWorkingDirectory(
             $application,
             $output,
-            \dirname($composerFile)
+            \dirname($composerFile),
+            \array_intersect_key(
+                $input->getOptions(),
+                [
+                    'ansi' => null,
+                    'no-ansi' => null,
+                    'v' => null,
+                    'verbose' => null,
+                    'vv' => null,
+                    'vvv' => null,
+                ]
+            )
         );
     }
 
@@ -494,18 +505,22 @@ final class NormalizeCommand extends Command\BaseCommand
     private static function updateLockerInWorkingDirectory(
         Console\Application $application,
         Console\Output\OutputInterface $output,
-        string $workingDirectory
+        string $workingDirectory,
+        array $additionalOptions
     ): int {
         return $application->run(
-            new Console\Input\ArrayInput([
-                'command' => 'update',
-                '--ignore-platform-reqs' => true,
-                '--lock' => true,
-                '--no-autoloader' => true,
-                '--no-plugins' => true,
-                '--no-scripts' => true,
-                '--working-dir' => $workingDirectory,
-            ]),
+            new Console\Input\ArrayInput(\array_merge(
+                [
+                    'command' => 'update',
+                    '--ignore-platform-reqs' => true,
+                    '--lock' => true,
+                    '--no-autoloader' => true,
+                    '--no-plugins' => true,
+                    '--no-scripts' => true,
+                    '--working-dir' => $workingDirectory,
+                ],
+                $additionalOptions
+            )),
             $output
         );
     }

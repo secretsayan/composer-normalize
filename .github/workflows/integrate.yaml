@@ -192,8 +192,17 @@ jobs:
       - name: "Run composer-normalize.phar"
         run: "${{ env.COMPOSER_NORMALIZE_PHAR }}"
 
-      - name: "Run composer-normalize.phar with argument and options"
+      - name: "Run composer-normalize.phar with argument and --dry-run option"
         run: "${{ env.COMPOSER_NORMALIZE_PHAR }} --dry-run composer.json"
+
+      - name: "Run composer-normalize.phar with argument, and --ansi and --dry-run options"
+        run: "${{ env.COMPOSER_NORMALIZE_PHAR }} --ansi --dry-run composer.json"
+
+      - name: "Run composer-normalize.phar with argument, and --dry-run and --no-ansi options"
+        run: "${{ env.COMPOSER_NORMALIZE_PHAR }} --dry-run --no-ansi composer.json"
+
+      - name: "Run composer-normalize.phar with argument, and --dry-run and -vvv options"
+        run: "${{ env.COMPOSER_NORMALIZE_PHAR }} --dry-run -vvv composer.json"
 
   dependency-analysis:
     name: "Dependency Analysis"
