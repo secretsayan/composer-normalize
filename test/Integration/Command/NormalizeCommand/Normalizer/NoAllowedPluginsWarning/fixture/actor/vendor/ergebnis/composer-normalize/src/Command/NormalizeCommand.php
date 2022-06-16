@@ -140,7 +140,6 @@ final class NormalizeCommand extends Command\BaseCommand
         $composer = $this->factory->createComposer(
             $io,
             $composerFile,
-            true,
         );
 
         if (!$composer instanceof Composer) {
