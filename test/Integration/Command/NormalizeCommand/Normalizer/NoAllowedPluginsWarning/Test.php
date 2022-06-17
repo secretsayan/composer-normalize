@@ -40,7 +40,7 @@ final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
     {
         $scenario = self::createScenario(
             $commandInvocation,
-            __DIR__ . '/fixture',
+            __DIR__ . '/fixture/subject',
         );
 
         $initialState = $scenario->initialState();
@@ -53,7 +53,7 @@ final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
 
         $application = self::createApplication($normalizeCommand);
 
-        $input = new Console\Input\ArrayInput($scenario->consoleParameters());
+        $input = new Console\Input\ArrayInput($scenario->consoleParametersWith(['--working-dir ='. __DIR__ . '/fixture/actor/' ]));
 
         $output = new Console\Output\BufferedOutput();
 
