@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Ergebnis\Composer\Normalize\Test\Integration\Command\NormalizeCommand\Normalizer\NoAllowedPluginsWarning;
 
+use Composer\Console\Application;
 use Composer\Factory;
 use Ergebnis\Composer\Normalize\Command\NormalizeCommand;
+use Ergebnis\Composer\Normalize\Exception\Exception;
 use Ergebnis\Composer\Normalize\NormalizePlugin;
 use Ergebnis\Composer\Normalize\Test\Integration;
 use Ergebnis\Composer\Normalize\Test\Util;
@@ -22,6 +24,7 @@ use Ergebnis\Json\Normalizer;
 use Ergebnis\Json\Printer;
 use Localheinz\Diff;
 use Symfony\Component\Console;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
  * @internal
@@ -33,36 +36,31 @@ use Symfony\Component\Console;
  */
 final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
 {
-    /**
-     * @dataProvider \Ergebnis\Composer\Normalize\Test\DataProvider\Command\NormalizeCommandProvider::commandInvocation()
-     */
-    public function testDoesNotWarnAboutAllowedPluginsWhenNormalizerRunsInOtherDirectory(Util\CommandInvocation $commandInvocation): void
+    public function testDoesNotWarnAboutAllowedPluginsWhenNormalizerRunsInOtherDirectory(): void
     {
-        $scenario = self::createScenario(
-            $commandInvocation,
-            __DIR__ . '/fixture',
-        );
-
-        $initialState = $scenario->initialState();
-
-        self::assertComposerJsonFileExists($initialState);
-
         $plugin = new NormalizePlugin();
         $command = $plugin->getCommands();
         $normalizeCommand = reset($command);
 
-        $application = self::createApplication($normalizeCommand);
+        $application = new Application();
+        $application->add($normalizeCommand);
 
-        $input = new Console\Input\ArrayInput($scenario->consoleParameters());
+        $command = $application->find('normalize');
+        $tester = new CommandTester($command);
 
-        $output = new Console\Output\BufferedOutput();
+        $inputs = [
+            'yes'
+        ];
+        $tester->setInputs($inputs);
+        $tester->execute([
+            'file' => [
+                __DIR__ . '/fixture/subject/composer.json'
+            ],
+            '--working-dir' => __DIR__ . '/fixture/actor',
+        ]);
 
-        $exitCode = $application->run(
-            $input,
-            $output,
-        );
+        $statusCode = $tester->getStatusCode();
 
-        self::assertExitCodeSame(0, $exitCode);
-        self::assertEquals($initialState, $scenario->currentState());
+        self::assertEquals(1, $statusCode);
     }
 }
