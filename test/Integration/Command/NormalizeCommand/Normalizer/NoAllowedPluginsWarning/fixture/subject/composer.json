@@ -1,5 +1,5 @@
 {
-  "license": "MIT",
   "type": "library",
-  "_comment": "This composer.json does not define any allowed plugins."
+  "_comment": "This composer.json does not define any allowed plugins.",
+  "license": "MIT"
 }
