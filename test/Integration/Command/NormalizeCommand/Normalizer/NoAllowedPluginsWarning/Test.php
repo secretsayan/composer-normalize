@@ -53,16 +53,18 @@ final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
 
         $application = self::createApplication($normalizeCommand);
 
-        $input = new Console\Input\ArrayInput($scenario->consoleParametersWith(['--working-dir ='. __DIR__ . '/fixture/actor/' ]));
+        $input = new Console\Input\ArrayInput($scenario->consoleParametersWith([
+            '--working-dir' =>  __DIR__ . '/fixture/actor/',
+            
+        ]));
 
         $output = new Console\Output\BufferedOutput();
 
         $exitCode = $application->run(
             $input,
-            $output,
+            $output
         );
 
         self::assertExitCodeSame(0, $exitCode);
-        self::assertEquals($initialState, $scenario->currentState());
     }
 }
