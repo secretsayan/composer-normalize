@@ -4,3 +4,4 @@
 /phar/src/
 /phar/vendor/
 /vendor/
+/test/Integration/Command/NormalizeCommand/Normalizer/NoAllowedPluginsWarning/fixture/actor/vendor/
