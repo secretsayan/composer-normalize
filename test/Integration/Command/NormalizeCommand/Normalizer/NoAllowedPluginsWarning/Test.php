@@ -13,14 +13,9 @@ declare(strict_types=1);
 
 namespace Ergebnis\Composer\Normalize\Test\Integration\Command\NormalizeCommand\Normalizer\NoAllowedPluginsWarning;
 
-use Composer\Factory;
-use Ergebnis\Composer\Normalize\Command\NormalizeCommand;
 use Ergebnis\Composer\Normalize\NormalizePlugin;
 use Ergebnis\Composer\Normalize\Test\Integration;
-use Ergebnis\Composer\Normalize\Test\Util;
-use Ergebnis\Json\Normalizer;
-use Ergebnis\Json\Printer;
-use Localheinz\Diff;
+use Ergebnis\Composer\Normalize\Test\Util\CommandInvocation;
 use Symfony\Component\Console;
 
 /**
@@ -33,51 +28,38 @@ use Symfony\Component\Console;
  */
 final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
 {
-    /**
-     * @dataProvider \Ergebnis\Composer\Normalize\Test\DataProvider\Command\NormalizeCommandProvider::commandInvocation()
-     */
-    public function testDoesNotWarnAboutAllowedPluginsWhenNormalizerRunsInOtherDirectory(Util\CommandInvocation $commandInvocation): void
+    public function testDoesNotWarnAboutAllowedPluginsWhenNormalizerRunsInOtherDirectory(): void
     {
-        if ($commandInvocation->is(Util\CommandInvocation::usingFileArgument())) {
-            $scenario = self::createScenario(
-                $commandInvocation,
-                __DIR__ . '/fixture/subject/',
-            );
+        $scenario = self::createScenario(
+            CommandInvocation::usingFileArgument(),
+            __DIR__ . '/fixture/subject/',
+        );
 
-            $initialState = $scenario->initialState();
+        $initialState = $scenario->initialState();
 
-            self::assertComposerJsonFileExists($initialState);
+        self::assertComposerJsonFileExists($initialState);
 
-            $plugin = new NormalizePlugin();
-            $command = $plugin->getCommands();
-            $normalizeCommand = reset($command);
+        $plugin = new NormalizePlugin();
+        $command = $plugin->getCommands();
+        $normalizeCommand = reset($command);
 
-            $application = self::createApplication($normalizeCommand);
+        $application = self::createApplication($normalizeCommand);
 
-            $input = new Console\Input\ArrayInput($scenario->consoleParametersWith([
-                '--working-dir' => __DIR__ . '/fixture/actor',
-                '-n'
+        $input = new Console\Input\ArrayInput($scenario->consoleParametersWith([
+            '--working-dir' => __DIR__ . '/fixture/actor',
+            '-n'
+        ]));
 
-            ]));
+        $output = new Console\Output\BufferedOutput();
 
-            $output = new Console\Output\BufferedOutput();
-            //$output->setVerbosity(3);
-            //$output->setDecorated(true);
+        $exitCode = $application->run(
+            $input,
+            $output
+        );
 
-            $exitCode = $application->run(
-                $input,
-                //$output,
-                $output
-            );
+        self::assertStringNotContainsString("which is blocked by your allow-plugins config",
+        $output->fetch());
 
-            self::assertStringNotContainsString("which is blocked by your allow-plugins config",
-            $output->fetch());
-
-
-            self::assertExitCodeSame(0, $exitCode);
-        } else{
-            self::assertExitCodeSame(0, 0);
-        }
-
+        self::assertExitCodeSame(0, $exitCode);
     }
 }
