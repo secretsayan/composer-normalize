@@ -46,7 +46,8 @@ final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
         $application = self::createApplication($normalizeCommand);
 
         $input = new Console\Input\ArrayInput($scenario->consoleParametersWith([
-            '--working-dir' => __DIR__ . '/fixture/actor',
+            //'--working-dir' => __DIR__ . '/fixture/actor',
+            '--working-dir' => __DIR__ . '/../../../../../../',
             '-n'
         ]));
 

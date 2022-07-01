@@ -34,7 +34,7 @@
     </php>
     <testsuites>
         <testsuite name="integration">
-            <directory>Integration/</directory>
+            <directory>Integration/Command/NormalizeCommand/Normalizer/NoAllowedPluginsWarning</directory>
         </testsuite>
         <testsuite name="unit">
             <directory>Unit/</directory>

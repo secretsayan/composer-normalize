@@ -1,0 +1,14 @@
+{
+  "name": "my/plugin-package",
+  "type": "composer-plugin",
+  "require": {
+    "composer-plugin-api": "^2.0"
+  },
+  "require-dev": {
+    "composer/composer": "^2.0"
+  },
+  "extra": {
+    "class": "My\\Plugin"
+  }
+}
+
