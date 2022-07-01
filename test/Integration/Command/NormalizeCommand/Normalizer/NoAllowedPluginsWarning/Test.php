@@ -56,6 +56,7 @@ final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
 
             $input = new Console\Input\ArrayInput($scenario->consoleParametersWith([
                 '--working-dir' => __DIR__ . '/fixture/actor',
+                '-n'
 
             ]));
 
@@ -63,15 +64,13 @@ final class Test extends Integration\Command\NormalizeCommand\AbstractTestCase
             //$output->setVerbosity(3);
             //$output->setDecorated(true);
 
-
-
             $exitCode = $application->run(
                 $input,
                 //$output,
-                $output->write("")
+                $output
             );
 
-            self::assertStringNotContainsString("allow-plugins",
+            self::assertStringNotContainsString("which is blocked by your allow-plugins config",
             $output->fetch());
 
 
