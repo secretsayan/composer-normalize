@@ -7,12 +7,7 @@
   },
   "config": {
     "allow-plugins": {
-      "ergebnis/composer-normalize": true
-    }
-  },
-  "condfig": {
-    "allow-plugins": {
-      "ergebnis/composer-normalize": true
+      "ergebnis/composer-normalize": false
     }
   }
 }
